@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+'use client'
+
+import { useState } from 'react'
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
-function App() {
+export default function Home() {
   const [transcript, setTranscript] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(null) // 'success', 'error', null
@@ -22,8 +24,8 @@ function App() {
     setErrorMessage('')
 
     try {
-      // Enviando directamente al webhook de n8n usando POST
-      const response = await fetch('https://devwebhook.iacondiego.es/webhook/transcript', {
+      // Enviando al endpoint API de Next.js
+      const response = await fetch('/api/send-transcript', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,11 +153,10 @@ function App() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-gray-400 text-sm">
-          <p>Diseñado con ❤️ usando React y Tailwind CSS</p>
+          <p>Diseñado con ❤️ usando Next.js y Tailwind CSS</p>
         </div>
       </div>
     </div>
   )
 }
 
-export default App
