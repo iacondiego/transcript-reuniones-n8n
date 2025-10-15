@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
 export default function Home() {
+  const [clientName, setClientName] = useState('')
   const [transcript, setTranscript] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(null) // 'success', 'error', null
@@ -12,6 +13,13 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
+    if (!clientName.trim()) {
+      setStatus('error')
+      setErrorMessage('Por favor, ingresa el nombre del cliente.')
+      setTimeout(() => setStatus(null), 3000)
+      return
+    }
+
     if (!transcript.trim()) {
       setStatus('error')
       setErrorMessage('Por favor, ingresa una transcripción antes de enviar.')
@@ -31,6 +39,7 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          clientName: clientName,
           transcript: transcript
         })
       })
@@ -42,6 +51,7 @@ export default function Home() {
         const responseData = await response.json()
         console.log('Success response:', responseData)
         setStatus('success')
+        setClientName('')
         setTranscript('')
       } else {
         const errorText = await response.text()
@@ -86,6 +96,21 @@ export default function Home() {
           {/* Formulario */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
+              <label htmlFor="clientName" className="block text-sm font-medium text-gray-200">
+                ¿A qué cliente pertenece el transcript?
+              </label>
+              <input
+                id="clientName"
+                type="text"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                placeholder="Ej: Empresa ABC, Juan Pérez..."
+                className="glass-input w-full px-4 py-3 rounded-xl focus:outline-none text-white placeholder-gray-400"
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
               <label htmlFor="transcript" className="block text-sm font-medium text-gray-200">
                 Transcripción de la reunión
               </label>
@@ -103,7 +128,7 @@ export default function Home() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                disabled={isLoading || !transcript.trim()}
+                disabled={isLoading || !clientName.trim() || !transcript.trim()}
                 className="glass-button px-8 py-4 rounded-xl font-semibold text-white flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transform transition-all duration-300 shadow-lg hover:shadow-cyan-500/25"
               >
                 {isLoading ? (

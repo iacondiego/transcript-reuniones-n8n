@@ -2,7 +2,14 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request) {
   try {
-    const { transcript } = await request.json()
+    const { clientName, transcript } = await request.json()
+
+    if (!clientName) {
+      return NextResponse.json(
+        { error: 'Client name is required' },
+        { status: 400 }
+      )
+    }
 
     if (!transcript) {
       return NextResponse.json(
@@ -12,6 +19,7 @@ export async function POST(request) {
     }
 
     console.log('Enviando transcripción al webhook...')
+    console.log('Cliente:', clientName)
     console.log('Longitud del texto:', transcript.length, 'caracteres')
 
     // Enviar al webhook de n8n
@@ -21,6 +29,7 @@ export async function POST(request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        clientName: clientName,
         transcript: transcript
       })
     })
