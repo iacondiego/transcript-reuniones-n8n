@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-600;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-dark-900 via-dark-800 to-dark-700 text-white font-inter;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-glass-50/10 backdrop-blur-md border border-glass-100/20 shadow-2xl;
+  }
+  
+  .glass-button {
+    @apply bg-gradient-to-r from-cyan-500/20 to-purple-500/20 backdrop-blur-sm border border-cyan-400/30 hover:border-cyan-300/50 transition-all duration-300;
+  }
+  
+  .glass-input {
+    @apply bg-glass-50/5 backdrop-blur-sm border border-glass-100/20 focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300;
+  }
+}
